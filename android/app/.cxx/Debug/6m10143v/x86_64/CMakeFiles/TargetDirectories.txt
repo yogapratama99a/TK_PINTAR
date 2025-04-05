@@ -1,0 +1,2 @@
+C:/flutter/Project/mobile-application/Project_3/tk_pertiwi/android/app/.cxx/Debug/6m10143v/x86_64/CMakeFiles/edit_cache.dir
+C:/flutter/Project/mobile-application/Project_3/tk_pertiwi/android/app/.cxx/Debug/6m10143v/x86_64/CMakeFiles/rebuild_cache.dir
