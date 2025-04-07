@@ -1,5 +1,4 @@
 
-
 class AppFonts {
   static const String LuckiestGuy = 'LuckiestGuy'; // Menggunakan font dari assets yang sudah didefinisikan di pubspec.yaml
   static const String PoppinsSemiBold = 'Poppins-SemiBold';

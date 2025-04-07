@@ -193,7 +193,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             initialValue: "Laki-laki",
                             onChanged: (value) {
                               setState(() {
-                                selectedGender = value!;
+                                selectedGender = value;
                               });
                             },
                           ),
@@ -212,7 +212,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             initialValue: "Islam",
                             onChanged: (value) {
                               setState(() {
-                                selectedReligion = value!;
+                                selectedReligion = value;
                               });
                             },
                           ),

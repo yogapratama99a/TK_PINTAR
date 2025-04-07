@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tk_pertiwi/views/backend/features/teacherstaff/chat.dart';
 import 'package:tk_pertiwi/views/backend/features/teacherstaff/detail.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
 import 'package:tk_pertiwi/views/theme/app_fonts.dart';
@@ -295,9 +296,20 @@ class _TeacherStaffScreenState extends State<TeacherStaffScreen> {
                 ),
                 if (!isAllSelected) ...[
                   const SizedBox(width: 10),
+                  // In your _buildTeacherCard method, modify the OutlinedButton:
                   OutlinedButton(
                     onPressed: () {
-                      // Message action
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SendMessageScreen(
+                            teacherName: name,
+                            teacherSubject: subject,
+                            teacherImage:
+                                'assets/img/attack_titan.jpg', // Add your image path
+                          ),
+                        ),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

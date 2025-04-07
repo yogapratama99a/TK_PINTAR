@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tk_pertiwi/views/theme/app_colors.dart';
+
 import 'package:tk_pertiwi/views/theme/app_fonts.dart';
 
 class ArticleScreen extends StatelessWidget {

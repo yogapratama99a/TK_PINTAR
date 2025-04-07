@@ -131,14 +131,4 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  void _saveSettings() {
-    // Implementasi penyimpanan pengaturan
-    // Contoh: SharedPreferences atau API call
-    print('Settings saved:');
-    print('Show Notifications: $_showNotifications');
-    print('Notification Sound: $_notificationSound');
-    print('Vibration: $_vibration');
-    print('Clear on Open: $_clearOnOpen');
-    print('Show Preview: $_showPreview');
-  }
 }
