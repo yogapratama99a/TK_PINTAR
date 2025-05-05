@@ -16,6 +16,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  image_picker: ^1.0.7 # Atau versi terbaru
+  dio: ^5.0.0
+  url_launcher: ^6.2.5
   # Ikon bergaya iOS
   cupertino_icons: any
 
@@ -24,7 +27,7 @@ dependencies:
 
   # Penyimpanan data lokal
   get_storage: ^2.1.1
-
+  
   # Cache gambar dari jaringan
   cached_network_image: ^3.3.0
 
@@ -33,7 +36,16 @@ dependencies:
 
   smooth_page_indicator: ^1.0.0
 
-  intl: ^0.18.1
+  intl: ^0.19.0
+
+  flutter_secure_storage: ^8.0.0
+
+  shared_preferences: ^2.2.2
+
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.3
+  cloud_firestore: ^5.6.7
+  firebase_storage: ^12.4.5
   
 dev_dependencies:
   flutter_test:

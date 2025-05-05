@@ -26,7 +26,7 @@ class RegisterOptions {
                   fontSize: 22,
                   fontFamily: AppFonts.PoppinsBold,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.green,
+                  color: AppColors.blue,
                 ),
               ),
             ),
@@ -36,18 +36,18 @@ class RegisterOptions {
                 AuthButton(
                   text: "Guru",
                   onPressed: () {
-                    Get.toNamed('/teacher');
+                    Get.toNamed('/register-teacher');
                   },
-                  backgroundColor: AppColors.green,
+                  backgroundColor: AppColors.blue,
                   foregroundColor: AppColors.white,
                 ),
                 const SizedBox(height: 12),
                 AuthButton(
                   text: "Wali Murid",
                   onPressed: () {
-                    Get.toNamed('/parent');
+                    Get.toNamed('/register-parent');
                   },
-                  backgroundColor: AppColors.green,
+                  backgroundColor: AppColors.blue,
                   foregroundColor: AppColors.white,
                 ),
               ],

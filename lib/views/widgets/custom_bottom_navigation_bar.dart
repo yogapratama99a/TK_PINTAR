@@ -23,10 +23,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
           onItemTapped(index);
           switch (index) {
             case 0:
-              Get.offNamed('/home');
+              Get.offNamed('/home-parent');
               break;
             case 1:
-              Get.offNamed('/announcement');
+              Get.offNamed('/announcements/student');
               break;
             case 2:
               Get.offNamed('/profile');

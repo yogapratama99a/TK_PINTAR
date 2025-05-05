@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math'; // Untuk fungsi Random()
 
 class CloudBackground extends StatelessWidget {
+  const CloudBackground({super.key});
+
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
@@ -29,9 +31,9 @@ class _CloudPainter extends CustomPainter {
 
   void _drawCloud(Canvas canvas, Paint paint, Offset center) {
     canvas.drawCircle(center, 20, paint);
-    canvas.drawCircle(center + Offset(15, -10), 25, paint);
-    canvas.drawCircle(center + Offset(30, 0), 20, paint);
-    canvas.drawCircle(center + Offset(15, 10), 25, paint);
+    canvas.drawCircle(center + const Offset(15, -10), 25, paint);
+    canvas.drawCircle(center + const Offset(30, 0), 20, paint);
+    canvas.drawCircle(center + const Offset(15, 10), 25, paint);
   }
 
   @override

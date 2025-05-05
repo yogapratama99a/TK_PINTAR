@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "571226052674",
+    "project_id": "tk-pintar",
+    "storage_bucket": "tk-pintar.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571226052674:android:21bce3f7ce39e4878835db",
+        "android_client_info": {
+          "package_name": "com.example.tkpintar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABPgPDaBZJVQncphqSSJ_nPDxmGB0Orac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

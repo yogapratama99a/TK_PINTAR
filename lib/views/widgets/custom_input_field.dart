@@ -1,3 +1,5 @@
+// views/widgets/custom_input_field.dart
+
 import 'package:flutter/material.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
 
@@ -7,8 +9,11 @@ class CustomInputField extends StatefulWidget {
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final bool isPassword;
-  final int? maxLines; 
-  final bool expands; // New parameter for flexible height
+  final int? maxLines;
+  final bool expands;
+  final bool readOnly; // Tambahan baru
+  final void Function()? onTap; // Tambahan baru
+  final String? Function(String?)? validator;
 
   const CustomInputField({
     super.key,
@@ -18,7 +23,10 @@ class CustomInputField extends StatefulWidget {
     this.maxLines = 1,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
-    this.expands = false, // Default to false
+    this.expands = false,
+    this.readOnly = false, // Default false
+    this.onTap, // Tambahan baru
+    this.validator,
   });
 
   @override
@@ -44,31 +52,46 @@ class _CustomInputFieldState extends State<CustomInputField> {
         const SizedBox(height: 4),
         ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: widget.maxLines! > 1 ? 60 : 48, // Adjust min height for multi-line
+            minHeight: widget.maxLines! > 1 ? 60 : 48,
           ),
-          child: TextField(
+          child: TextFormField(
             controller: widget.controller,
             keyboardType: widget.keyboardType,
             obscureText: widget.isPassword && !_isPasswordVisible,
             maxLines: widget.expands ? null : widget.maxLines,
             expands: widget.expands,
+            readOnly: widget.readOnly, // Tambahan
+            onTap: widget.onTap, // Tambahan
+            validator: widget.validator,
             decoration: InputDecoration(
               hintText: widget.hintText,
               filled: true,
               fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.green),
-              ),
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 12,
                 horizontal: 16,
               ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.green),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.green),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.green),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.green),
+              ),
               suffixIcon: widget.isPassword
                   ? IconButton(
                       icon: Icon(
-                        _isPasswordVisible 
-                            ? Icons.visibility 
+                        _isPasswordVisible
+                            ? Icons.visibility
                             : Icons.visibility_off,
                         color: Colors.black,
                       ),
@@ -79,7 +102,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                       },
                     )
                   : null,
-              alignLabelWithHint: true, // Better alignment for multi-line
+              alignLabelWithHint: true,
             ),
           ),
         ),

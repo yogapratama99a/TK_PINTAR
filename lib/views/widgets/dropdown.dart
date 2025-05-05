@@ -51,7 +51,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
             fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.green),
+              borderSide: const BorderSide(color: AppColors.blue), // Set border color to AppColors.blue
             ),
             contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
