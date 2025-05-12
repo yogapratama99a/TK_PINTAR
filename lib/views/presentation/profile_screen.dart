@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tk_pertiwi/controllers/profile_controller.dart';
 import 'package:tk_pertiwi/views/presentation/notification_screen.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
@@ -12,15 +14,16 @@ import 'package:tk_pertiwi/views/presentation/change_password_screen.dart';
 import 'package:tk_pertiwi/views/widgets/custom_bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
+  final box = GetStorage();
   ProfileScreen({super.key}) {
     // Inisialisasi controller
     Get.put(ProfileController());
+    
   }
 
   @override
   Widget build(BuildContext context) {
     final ProfileController profileController = Get.find<ProfileController>();
-
 
     return Scaffold(
       body: Container(
@@ -83,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
                                 end: Alignment.bottomRight,
                                 colors: [
                                   Color(0xFF1E88E5),
-                                  Color(0xFF0D47A1),
+                                  Color(0xFF0D47A1),  
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -107,7 +110,7 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                     child: buildStudentAvatar(profileController
-                                        .studentImageUrl.value),
+                                        .displayImageUrl.value),
                                   ),
                                   const SizedBox(height: 16),
                                   const Text(
@@ -120,7 +123,7 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    profileController.studentName.value,
+                                    profileController.displayName.value,
                                     style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
@@ -224,13 +227,15 @@ class ProfileScreen extends StatelessWidget {
         onTap: () {
           if (title == "Akun") {
             Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AccountScreen()),
-            );
-          } else if (title == "Notifikasi") {
+                context,
+                MaterialPageRoute(builder: (context) => const AccountScreen()),
+              );
+            }
+           else if (title == "Notifikasi") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NotificationScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const NotificationScreen()),
             );
           } else if (title == "Pusat Bantuan") {
             Navigator.push(
@@ -241,7 +246,7 @@ class ProfileScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ChangePasswordScreen()),
+                  builder: (context) => const ChangePasswordScreen()),
             );
           } else if (title == "Keluar") {
             _showLogoutConfirmation(context);

@@ -25,10 +25,11 @@ class TeacherHomeController extends GetxController {
 
     if (profileString != null) {
       final profile = jsonDecode(profileString);
+      final teacher = profile['teacher'];
 
       // Karena profile sudah langsung berisi data guru (tidak ada profile['profile'])
-      teacherName.value = profile['name'] ?? 'Guru TK Pertiwi';
-      teacherImageUrl.value = profile['image']?.toString() ?? '';
+      teacherName.value = teacher['name'] ?? 'Guru TK Pertiwi';
+      teacherImageUrl.value = teacher['image']?.toString() ?? '';
     }
   } catch (e) {
     print('❌ Error loading teacher profile: $e');
@@ -38,10 +39,6 @@ class TeacherHomeController extends GetxController {
 
   void changeTabIndex(int index) {
     selectedIndex.value = index;
-  }
-
-  void toggleNotification() {
-    isNotificationActive.value = !isNotificationActive.value;
   }
 
   String truncateDescription(String? text, {int maxLength = 100}) {

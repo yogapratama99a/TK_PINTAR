@@ -1,0 +1,2 @@
+D:/PBL/TK/TK_PINTAR/android/app/.cxx/Debug/392v5t2k/x86_64/CMakeFiles/edit_cache.dir
+D:/PBL/TK/TK_PINTAR/android/app/.cxx/Debug/392v5t2k/x86_64/CMakeFiles/rebuild_cache.dir

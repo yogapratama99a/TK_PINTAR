@@ -59,6 +59,7 @@ class AnnouncementScreen extends StatelessWidget {
                 ),
               )),
 
+          // List Pengumuman
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
@@ -101,11 +102,8 @@ class AnnouncementScreen extends StatelessWidget {
                               controller.filteredAnnouncements[index];
                           return AnnouncementCard(
                             title: announcement.title,
-                            position: announcement.teacherPoisition,
                             date: controller.formatDate(announcement.date),
                             message: announcement.content,
-                            imageUrl: announcement.teacherImageUrl,
-                            name: announcement.teacherName,
                           );
                         },
                       ),

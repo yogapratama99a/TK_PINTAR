@@ -80,10 +80,11 @@ class MobileRoutes {
 
     // BackEnd
 
-    GetPage(name: '/home-parent', page: () => HomeScreen()),
+    GetPage(name: '/home-parent', page: () => const HomeScreen()),
     GetPage(name: '/home-teacher', page: () => TeacherHomeScreen()),
 
-    GetPage(name: '/announcements/student', page: () => AnnouncementScreen()),
+    GetPage(name: '/announcements', page: () => AnnouncementScreen()),
+    
 
     GetPage(name: '/schedule', page: () => ScheduleScreen()),
 
@@ -97,8 +98,8 @@ class MobileRoutes {
     // Profile
     GetPage(name: '/profile', page: () => ProfileScreen()),
     GetPage(name: '/account', page: () => const AccountScreen()),
-    GetPage(name: '/change', page: () => ChangePasswordScreen()),
-    GetPage(name: '/notification', page: () => NotificationScreen()),
+    GetPage(name: '/change', page: () => const ChangePasswordScreen()),
+    GetPage(name: '/notification', page: () => const NotificationScreen()),
     GetPage(name: '/support', page: () => SupportCenterScreen()),
   ];
 }

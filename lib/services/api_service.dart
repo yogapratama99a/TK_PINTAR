@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
@@ -48,7 +49,8 @@ class ApiService {
     } on DioException catch (e) {
       return {
         'success': false,
-        'message': e.response?.data['message'] ?? 'Terjadi kesalahan: ${e.message}',
+        'message':
+            e.response?.data['message'] ?? 'Terjadi kesalahan: ${e.message}',
       };
     }
   }
@@ -126,19 +128,118 @@ class ApiService {
     }
   }
 
-  
-
   // ==== ENDPOINT SPESIFIK ====
 
-  static Future<Map<String, dynamic>> getMyStudent() async => await get('my-student');
-  static Future<Map<String, dynamic>> getMyTeacher() async => await get('my-teacher');
-  static Future<Map<String, dynamic>> getTeacherStaff() async => await get('teacher-staff');
-  static Future<Map<String, dynamic>> getArticles() async => await get('articles');
-  static Future<Map<String, dynamic>> getAnnouncement() async => await get('announcement');
-  static Future<Map<String, dynamic>> getSchedule() async => await get('schedule');
-  static Future<Map<String, dynamic>> getPayment() async => await get('payment');
-  static Future<Map<String, dynamic>> getLearningOutcomes() async => await get('learning-outcomes');
-  static Future<Map<String, dynamic>> getTeacherDetail(int teacherId) async => await get('detail-teacher/$teacherId');
-  static Future<Map<String, dynamic>> getProfile() async => await get('profile');
-  static Future<Map<String, dynamic>> getSupportCenter() async => await get('support-center');
+  /// Refresh Token
+  static Future<Map<String, dynamic>> refreshToken() async {
+    try {
+      final token = await getToken(); // Ambil token yang disimpan sebelumnya
+      if (token!.isEmpty) {
+        return {
+          'success': false,
+          'message': 'Token tidak ditemukan',
+        };
+      }
+
+      final response = await _dio.post(
+        'refresh-token', // Endpoint refresh token
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      // Pastikan ada data response yang valid
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'data': response.data['data'] ?? response.data,
+        };
+      }
+
+      return {
+        'success': false,
+        'message': 'Gagal memperbarui token',
+      };
+    } on DioException catch (e) {
+      return {
+        'success': false,
+        'message':
+            e.response?.data['message'] ?? 'Terjadi kesalahan: ${e.message}',
+        'statusCode': e.response?.statusCode ?? 500,
+      };
+    }
+  }
+
+  // ==== ENDPOINT FUNGSI LAINNYA ====
+  static Future<Map<String, dynamic>> registerParent(
+          Map<String, dynamic> body) async =>
+      await post('register-parent', body);
+
+  static Future<Map<String, dynamic>> registerTeacher(
+          Map<String, dynamic> body) async =>
+      await post('register-teacher', body);
+
+  static Future<Map<String, dynamic>> forgotPasswordCheckEmail(
+          Map<String, dynamic> body) async =>
+      await post('forgot-password/check-email', body);
+
+  static Future<Map<String, dynamic>> verifyOtp(
+          Map<String, dynamic> body) async =>
+      await post('forgot-password/verify-otp', body);
+
+  static Future<Map<String, dynamic>> resendOtp(
+          Map<String, dynamic> body) async =>
+      await post('forgot-password/resend-otp', body);
+
+  static Future<Map<String, dynamic>> setNewPassword(
+          Map<String, dynamic> body) async =>
+      await post('forgot-password/new-password', body);
+
+  static Future<Map<String, dynamic>> login(Map<String, dynamic> body) async =>
+      await post('login', body);
+
+  static Future<Map<String, dynamic>> getMyStudent() async =>
+      await get('my-student');
+  static Future<Map<String, dynamic>> getMyTeacher() async =>
+      await get('my-teacher');
+  static Future<Map<String, dynamic>> getTeacherStaff() async =>
+      await get('teacher-staff');
+  static Future<Map<String, dynamic>> getArticles() async =>
+      await get('articles');
+  static Future<Map<String, dynamic>> getAnnouncement() async =>
+      await get('announcement');
+  static Future<Map<String, dynamic>> getAllAnnouncement() async =>
+      await get('announcement/all');
+  static Future<Map<String, dynamic>> getSchedule() async =>
+      await get('schedule');
+  static Future<Map<String, dynamic>> getPayment() async =>
+      await get('payment');
+  static Future<Map<String, dynamic>> getLearningOutcomes() async =>
+      await get('learning-outcomes');
+  static Future<Map<String, dynamic>> getTeacherDetail(int teacherId) async =>
+      await get('detail-teacher/$teacherId');
+  static Future<Map<String, dynamic>> getProfile() async =>
+      await get('profile');
+  static Future<Map<String, dynamic>> getSupportCenter() async =>
+      await get('support-center');
+  static Future<Map<String, dynamic>> getUserById(int userId) async =>
+      await get('user/$userId');
+
+  // Fungsi untuk send notification
+  static Future<Map<String, dynamic>> sendNotification(
+          Map<String, dynamic> body) async =>
+      await post('send-notification', body);
+
+  static Future<void> saveFcmToken(String userId) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      await ApiService.post('save-fcm-token', {
+        'userId': userId,
+        'fcm_token': token,
+      });
+    }
+  }
 }

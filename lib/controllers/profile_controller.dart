@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class ProfileController extends GetxController {
-  var studentName = ''.obs;
-  var studentImageUrl = ''.obs;
+  var displayName = ''.obs;
+  var displayImageUrl = ''.obs;
+
   RxInt selectedIndex = 2.obs;
 
   @override
@@ -18,39 +18,35 @@ class ProfileController extends GetxController {
     selectedIndex.value = index;
   }
 
-  /// Load data pengguna dari SharedPreferences (bisa student, teacher, atau parent)
   Future<void> loadUserFromProfile() async {
     final prefs = await SharedPreferences.getInstance();
-    final profileString = prefs.getString('profile'); // Gunakan key yang benar
+    final profileString = prefs.getString('profile');
 
     if (profileString != null) {
       final profile = jsonDecode(profileString);
 
-      // Ambil student jika ada, jika tidak coba teacher atau parent
       final student = profile['student'];
       final teacher = profile['teacher'];
-      final parent = profile['parent'];
 
       if (student != null) {
-        studentName.value = student['name'] ?? 'Nama tidak ditemukan';
-        studentImageUrl.value = student['image'] ?? '';
+        displayName.value = student['name'] ?? 'Nama tidak ditemukan';
+        displayImageUrl.value = student['image'] ?? '';
       } else if (teacher != null) {
-        studentName.value = teacher['name'] ?? 'Nama tidak ditemukan';
-        studentImageUrl.value = teacher['image'] ?? '';
-      } else if (parent != null) {
-        studentName.value = parent['name'] ?? 'Nama tidak ditemukan';
-        studentImageUrl.value = parent['image'] ?? '';
+        displayName.value = teacher['name'] ?? 'Nama tidak ditemukan';
+        displayImageUrl.value = teacher['image'] ?? '';
       } else {
-        print('Tidak ada data pengguna yang dikenali di dalam profil');
+        // fallback: pakai data parent (root)
+        displayName.value = profile['name'] ?? 'Nama tidak ditemukan';
+        displayImageUrl.value = profile['image'] ?? '';
       }
 
-      print('Image URL: ${studentImageUrl.value}');
+      print('Nama tampil: ${displayName.value}');
+      print('Image URL: ${displayImageUrl.value}');
     } else {
       print('Data profil tidak ditemukan di SharedPreferences');
     }
   }
 
-  /// Simpan data pengguna sebagian (tidak menimpa seluruh `profile`)
   Future<void> updateUserImage(String imageUrl) async {
     final prefs = await SharedPreferences.getInstance();
     final profileString = prefs.getString('profile');
@@ -58,13 +54,16 @@ class ProfileController extends GetxController {
     if (profileString != null) {
       final profile = jsonDecode(profileString);
 
-      // Perbarui gambar (asumsi data student)
       if (profile['student'] != null) {
         profile['student']['image'] = imageUrl;
+      } else if (profile['teacher'] != null) {
+        profile['teacher']['image'] = imageUrl;
+      } else {
+        profile['image'] = imageUrl;
       }
 
       await prefs.setString('profile', jsonEncode(profile));
-      studentImageUrl.value = imageUrl;
+      displayImageUrl.value = imageUrl;
     }
   }
 
@@ -72,7 +71,7 @@ class ProfileController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('profile');
 
-    studentName.value = '';
-    studentImageUrl.value = '';
+    displayName.value = '';
+    displayImageUrl.value = '';
   }
 }

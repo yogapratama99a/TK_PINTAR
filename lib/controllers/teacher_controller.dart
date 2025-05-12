@@ -16,7 +16,6 @@ class TeacherStaffController extends GetxController {
 
   void loadData() async {
     fetchTeachers();
-    fetchMyTeacher(); // pastikan dijalankan setelah fetchTeachers
   }
 
   // ✅ Ambil semua data guru/staff
@@ -46,61 +45,20 @@ class TeacherStaffController extends GetxController {
     }
   }
 
-  void fetchMyTeacher() async {
-  try {
-    isLoading.value = true;
-
-    final token = await ApiService.getToken();
-    print('Token yang digunakan: $token');
-
-    final result = await ApiService.getMyTeacher();
-    print('Response fetchMyTeacher: $result');
-
-    if (result['success'] == true) {
-      final data = result['data'];
-
-      if (data != null && data is List) {
-        myTeacherList.value = List<Map<String, dynamic>>.from(data);
-      } else if (data is Map<String, dynamic>) {
-        myTeacherList.value = [data];
-      } else {
-        Get.snackbar('Error', 'Format data wali kelas tidak dikenali');
-        return;
-      }
-
-      // ✅ SIMPAN ID WALI KELAS KE SHARED PREFERENCES (ambil id pertama jika ada)
-      if (myTeacherList.isNotEmpty) {
-        final teacherId = myTeacherList.first['id'];
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setInt('my_teacher_id', teacherId);
-        print('ID wali kelas yang disimpan: $teacherId');
-      } else {
-        print('Tidak ada wali kelas ditemukan untuk disimpan');
-      }
-
-    } else {
-      Get.snackbar('Gagal', result['message'] ?? 'Gagal memuat wali kelas');
-    }
-  } catch (e) {
-    Get.snackbar('Error', 'Terjadi kesalahan saat mengambil wali kelas');
-  } finally {
-    isLoading.value = false;
-  }
-}
 
 
   void showAllTeachers() {
     fetchTeachers(); // Ambil ulang semua guru
   }
 
-  void showHomeroomTeachers() {
-    fetchMyTeacher(); // Ambil hanya wali kelas berdasarkan user
-    if (myTeacherList.isNotEmpty) {
-      filteredTeachers.value = myTeacherList; // Menampilkan hanya wali kelas
-    } else {
-      Get.snackbar('Error', 'Wali kelas tidak ditemukan');
-    }
-  }
+  // void showHomeroomTeachers() {
+  //   fetchMyTeacher(); // Ambil hanya wali kelas berdasarkan user
+  //   if (myTeacherList.isNotEmpty) {
+  //     filteredTeachers.value = myTeacherList; // Menampilkan hanya wali kelas
+  //   } else {
+  //     Get.snackbar('Error', 'Wali kelas tidak ditemukan');
+  //   }
+  // }
 
   void filterTeachers(String query) {
     if (query.isEmpty) {

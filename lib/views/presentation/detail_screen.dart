@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
 import 'package:tk_pertiwi/views/theme/app_fonts.dart';
-import 'package:get/get.dart';
 import '../../controllers/teacher_detail_controller.dart';
 
 class TeacherDetailsBottomSheet extends StatefulWidget {

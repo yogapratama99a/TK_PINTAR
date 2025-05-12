@@ -6,6 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tk_pertiwi/controllers/article_controller.dart';
 import 'package:tk_pertiwi/controllers/parent_home_controller.dart';
 import 'package:tk_pertiwi/views/presentation/article_screen.dart';
+import 'package:tk_pertiwi/views/presentation/chat-parent_screen.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
 import 'package:tk_pertiwi/views/theme/app_fonts.dart';
 import 'package:tk_pertiwi/views/widgets/custom_bottom_navigation_bar.dart';
@@ -82,15 +83,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 const Spacer(),
-                Obx(() => IconButton(
+                IconButton(
                       icon: Icon(
-                        isNotificationActive.value
-                            ? Icons.notifications_active
-                            : Icons.notifications_off,
+                        Icons.chat,
                         color: AppColors.blue,
                       ),
-                      onPressed: toggleNotification,
-                    )),
+                      onPressed: () async {
+                        controller.fetchMyTeacher();
+                        final teacher = controller.myTeacherList.isNotEmpty
+                            ? controller.myTeacherList.first
+                            : null;
+                        if (teacher != null) {
+                          Get.to(() => SendMessageScreen(
+                                receiverId: teacher['id'],
+                                receiverName: teacher['name'],
+                                receiverImage: teacher['url'] ?? '',
+                                subject: teacher['subject'],
+                              ));
+                        } else {
+                          Get.snackbar('Error', 'No teacher found');
+                        }
+                      },
+                    ),
               ],
             ),
           ),
@@ -126,8 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-          ],
+          boxShadow: const [],
         ),
         child: Column(
           children: [
@@ -363,11 +376,8 @@ class _HomeScreenState extends State<HomeScreen> {
             else
               ...announcementsToday.map((data) => AnnouncementCard(
                     title: data.title,
-                    position: data.teacherPoisition,
+
                     message: data.content,
-                    imageUrl: data.teacherImageUrl,
-                    name: data.teacherName,
-                    date: DateFormat('dd MMM yyyy').format(data.date),
                   )),
           ],
         ),

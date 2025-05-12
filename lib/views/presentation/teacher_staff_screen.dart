@@ -101,37 +101,6 @@ class _TeacherStaffScreenState extends State<TeacherStaffScreen> {
               keyboardType: TextInputType.text,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildFilterChip(
-                    label: 'Semua Guru',
-                    selected: isAllSelected,
-                    onTap: () {
-                      setState(() {
-                        isAllSelected = true;
-                        widget.controller.showAllTeachers();
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  _buildFilterChip(
-                    label: 'Wali Kelas',
-                    selected: !isAllSelected,
-                    onTap: () {
-                      setState(() {
-                        isAllSelected = false;
-                        widget.controller.showHomeroomTeachers();
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
           const SizedBox(height: 16),
           Expanded(
             child: Padding(
@@ -280,38 +249,6 @@ class _TeacherStaffScreenState extends State<TeacherStaffScreen> {
                   ),
                 ),
               ),
-              if (isHomeroom) ...[
-                const SizedBox(width: 10),
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SendMessageScreen(
-                          receiverId: user_id,
-                          receiverName: name,
-                          subject: subject,
-                          receiverImage: url ?? '',
-                        ),
-                      ),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    side: const BorderSide(color: AppColors.green),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Kirim Pesan',
-                    style: TextStyle(
-                      color: AppColors.green,
-                      fontFamily: AppFonts.PoppinsMedium,
-                    ),
-                  ),
-                ),
-              ],
             ],
           ),
           const Divider(height: 24, thickness: 1, color: Colors.grey),

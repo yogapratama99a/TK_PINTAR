@@ -3,14 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tk_pertiwi/controllers/student_controller.dart';
-import 'package:tk_pertiwi/views/presentation/chat-parent_screen.dart';
 import 'package:tk_pertiwi/views/presentation/chat-teacher_screen.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
 import 'package:tk_pertiwi/views/theme/app_fonts.dart';
 import 'package:tk_pertiwi/views/widgets/input_field_register.dart';
-import 'package:tk_pertiwi/views/widgets/navbar_teacher.dart';
-import '../../models/student_model.dart';
-
 class StudentChatScreen extends StatefulWidget {
   final StudentController controller = Get.put(StudentController());
 
@@ -80,12 +76,6 @@ class _StudentChatScreenState extends State<StudentChatScreen> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: NavbarTeacher(
-        selectedIndex: 1,
-        onItemTapped: (index) {
-          // Navigation logic
-        },
       ),
     );
   }

@@ -15,6 +15,8 @@ class BorderLabelInputField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.maxLines = 1, // ✅ Default value is 1 (single line)
+    this.description, // ✅ Optional description text below the field
   });
 
   final String borderLabel;
@@ -26,7 +28,9 @@ class BorderLabelInputField extends StatelessWidget {
   final bool isError;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final void Function(String)? onChanged; // ✅ Tambahkan parameter onChanged
+  final void Function(String)? onChanged;
+  final int maxLines; // ✅ Number of lines for the text field
+  final String? description; // ✅ Optional description text
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +45,8 @@ class BorderLabelInputField extends StatelessWidget {
                 controller: controller,
                 obscureText: isPassword,
                 keyboardType: keyboardType,
-                onChanged: onChanged, // ✅ Pasang onChanged ke TextField
-
+                onChanged: onChanged,
+                maxLines: maxLines, // ✅ Set maxLines for the TextField
                 style: const TextStyle(
                   fontSize: 14,
                   fontFamily: AppFonts.InterRegular,
@@ -54,9 +58,9 @@ class BorderLabelInputField extends StatelessWidget {
                     fontFamily: AppFonts.InterRegular,
                     color: AppColors.grey600,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
+                  contentPadding: EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 16,
+                    vertical: maxLines > 1 ? 12 : 16, // ✅ Adjust padding for multiline
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -104,6 +108,20 @@ class BorderLabelInputField extends StatelessWidget {
             ),
           ],
         ),
+        // Show description if provided
+        if (description != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, top: 4.0),
+            child: Text(
+              description!,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.grey600,
+                fontFamily: AppFonts.PoppinsRegular,
+              ),
+            ),
+          ),
+        // Show error text if provided
         if (errorText?.isNotEmpty == true)
           Padding(
             padding: const EdgeInsets.only(left: 12.0, top: 4.0),

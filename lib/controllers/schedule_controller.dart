@@ -26,7 +26,7 @@ class ScheduleController extends GetxController {
         // Mengurutkan hari berdasarkan urutan yang diinginkan
         List<String> urutanHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         
-        urutanHari.forEach((hari) {
+        for (var hari in urutanHari) {
           if (data.containsKey(hari)) {
             // Urutkan jadwal berdasarkan jam mulai
             List<Map<String, dynamic>> activities = List<Map<String, dynamic>>.from(data[hari]);
@@ -37,7 +37,7 @@ class ScheduleController extends GetxController {
             });
             result[hari] = activities;
           }
-        });
+        }
 
         scheduleData.value = result;
       }

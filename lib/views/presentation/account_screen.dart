@@ -23,6 +23,8 @@ class _AccountScreenState extends State<AccountScreen> {
   late final TextEditingController ttlController;
   late final TextEditingController noTeleponController;
   late final TextEditingController alamatController;
+  late final TextEditingController nipController;
+  late final TextEditingController aboutMeController;
 
   @override
   void initState() {
@@ -32,12 +34,23 @@ class _AccountScreenState extends State<AccountScreen> {
     ttlController = TextEditingController();
     noTeleponController = TextEditingController();
     alamatController = TextEditingController();
+    nipController = TextEditingController();
+    aboutMeController = TextEditingController();
 
     controller.loadProfile().then((_) {
-      namaController.text = controller.studentName.value;
-      ttlController.text = controller.studentBorn.value;
-      noTeleponController.text = controller.parentPhone.value;
-      alamatController.text = controller.parentAddress.value;
+      if (controller.userRole.value == 'teacher') {
+        namaController.text = controller.teacherName.value;
+        ttlController.text = controller.teacherBorn.value;
+        noTeleponController.text = controller.teacherPhone.value;
+        alamatController.text = controller.teacherAddress.value;
+        nipController.text = controller.teacherNip.value;
+        aboutMeController.text = controller.teacherAboutMe.value;
+      } else {
+        namaController.text = controller.studentName.value;
+        ttlController.text = controller.studentBorn.value;
+        noTeleponController.text = controller.parentPhone.value;
+        alamatController.text = controller.parentAddress.value;
+      }
     }).catchError((error) {
       Get.snackbar("Error", "Gagal memuat data profil: $error");
     });
@@ -46,58 +59,60 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   void _setupControllerListeners() {
-    ever(controller.studentName, (value) {
-      if (namaController.text != value) {
-        namaController.text = value;
-      }
-    });
-    ever(controller.studentBorn, (value) {
-      if (ttlController.text != value) {
-        ttlController.text = value;
-      }
-    });
-    ever(controller.parentPhone, (value) {
-      if (noTeleponController.text != value) {
-        noTeleponController.text = value;
-      }
-    });
-    ever(controller.parentAddress, (value) {
-      if (alamatController.text != value) {
-        alamatController.text = value;
-      }
-    });
+    if (controller.userRole.value == 'teacher') {
+      ever(controller.studentName, (value) {
+        if (namaController.text != value) {
+          namaController.text = value;
+        }
+      });
+      ever(controller.studentBorn, (value) {
+        if (ttlController.text != value) {
+          ttlController.text = value;
+        }
+      });
+      ever(controller.parentPhone, (value) {
+        if (noTeleponController.text != value) {
+          noTeleponController.text = value;
+        }
+      });
+      ever(controller.parentAddress, (value) {
+        if (alamatController.text != value) {
+          alamatController.text = value;
+        }
+      });
+    } else {
+      ever(controller.teacherName, (value) {
+        if (namaController.text != value) {
+          namaController.text = value;
+        }
+      });
+      ever(controller.teacherBorn, (value) {
+        if (ttlController.text != value) {
+          ttlController.text = value;
+        }
+      });
+      ever(controller.teacherPhone, (value) {
+        if (noTeleponController.text != value) {
+          noTeleponController.text = value;
+        }
+      });
+      ever(controller.teacherAddress, (value) {
+        if (alamatController.text != value) {
+          alamatController.text = value;
+        }
+      });
+      ever(controller.teacherNip, (value) {
+        if (nipController.text != value) {
+          nipController.text = value;
+        }
+      });
+      ever(controller.teacherAboutMe, (value) {
+        if (aboutMeController.text != value) {
+          aboutMeController.text = value;
+        }
+      });
+    }
   }
-
-  // Future<void> _saveProfile() async {
-  //   if (!_formKey.currentState!.validate()) return;
-
-  //   try {
-  //     await controller.saveProfile(
-  //       newName: namaController.text.trim(),
-  //       newBirthDate: ttlController.text.trim(),
-  //       newGender: controller.gender.value,
-  //       newReligion: controller.religion.value,
-  //       newPhone: noTeleponController.text.trim(),
-  //       newAddress: alamatController.text.trim(),
-  //     );
-
-  //     Get.snackbar(
-  //       "Berhasil",
-  //       "Profil berhasil diperbarui",
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.green,
-  //       colorText: Colors.white,
-  //     );
-  //   } catch (e) {
-  //     Get.snackbar(
-  //       "Gagal",
-  //       "Gagal memperbarui profil: ${e.toString()}",
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       colorText: Colors.white,
-  //     );
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -105,6 +120,9 @@ class _AccountScreenState extends State<AccountScreen> {
     ttlController.dispose();
     noTeleponController.dispose();
     alamatController.dispose();
+    nipController.dispose();
+    aboutMeController.dispose();
+
     super.dispose();
   }
 
@@ -140,7 +158,11 @@ class _AccountScreenState extends State<AccountScreen> {
                       children: [
                         _buildProfileHeader(),
                         const SizedBox(height: 32),
-                        _buildProfileForm(),
+                        if (controller.userRole.value == 'teacher') ...[
+                          _buildTeacherProfileForm(),
+                        ] else ...[
+                          _buildProfileForm(),
+                        ],
                       ],
                     ),
                   ),
@@ -248,14 +270,138 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
           const SizedBox(height: 8),
           Obx(() => Text(
-                controller.studentName.value,
+                controller.displayName,
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontFamily: AppFonts.PoppinsBold,
                 ),
-              )),
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTeacherProfileForm() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withOpacity(0.9),
+            Colors.white.withOpacity(0.7),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Informasi Guru",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontFamily: AppFonts.PoppinsBold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          BorderLabelInputField(
+            borderLabel: "Nama",
+            hintText: "Masukkan Nama",
+            controller: namaController,
+            keyboardType: TextInputType.name,
+          ),
+          const SizedBox(height: 12),
+          BorderLabelInputField(
+            borderLabel: "NIP",
+            hintText: "Masukkan NIP",
+            controller: nipController,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 12),
+          BorderLabelInputField(
+            borderLabel: "Tempat Tanggal Lahir",
+            hintText: "Masukkan Tempat Tanggal Lahir",
+            controller: ttlController,
+          ),
+          const SizedBox(height: 12),
+          BorderLabelInputField(
+            borderLabel: "Nomor Telepon",
+            hintText: "Masukkan Nomor Telepon",
+            controller: noTeleponController,
+            keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 12),
+          BorderLabelInputField(
+            borderLabel: "Alamat",
+            hintText: "Masukkan Alamat",
+            controller: alamatController,
+          ),
+          const SizedBox(height: 12),
+          BorderLabelInputField(
+            borderLabel: "Tentang Saya",
+            hintText: "Masukkan Tentang Saya",
+            controller: aboutMeController,
+            maxLines: 4,
+          ),
+          const SizedBox(height: 32),
+          AuthButton(
+            text: "Simpan Perubahan",
+            onPressed: () async {
+              if (namaController.text.trim().isEmpty ||
+                  nipController.text.trim().isEmpty ||
+                  ttlController.text.trim().isEmpty ||
+                  noTeleponController.text.trim().isEmpty ||
+                  alamatController.text.trim().isEmpty ||
+                  aboutMeController.text.trim().isEmpty) {
+                Get.snackbar(
+                  "Peringatan",
+                  "Mohon lengkapi semua data!",
+                  backgroundColor: Colors.orange,
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              final response = await AccountController.updateTeacherProfile(
+                teacherName: namaController.text.trim(),
+                teacherNip: nipController.text.trim(),
+                teacherTTL: ttlController.text.trim(),
+                teacherPhone: noTeleponController.text.trim(),
+                teacherAddress: alamatController.text.trim(),
+                teacherAboutMe: aboutMeController.text.trim(),
+              );
+
+              if (response['success'] == true) {
+                controller.teacherName.value = namaController.text.trim();
+                Get.snackbar(
+                  "Sukses",
+                  "Profil guru berhasil diperbarui!",
+                  backgroundColor: Colors.green,
+                  colorText: Colors.white,
+                );
+              } else {
+                Get.snackbar(
+                  "Gagal",
+                  "Gagal menyimpan data: ${response['message'] ?? ''}",
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
+            },
+          ),
         ],
       ),
     );

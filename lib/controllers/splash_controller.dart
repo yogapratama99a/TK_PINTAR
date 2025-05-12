@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tk_pertiwi/services/api_service.dart';
 
 class SplashController extends GetxController with GetTickerProviderStateMixin {
   late AnimationController logoController;
@@ -15,12 +17,15 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
   var stopBouncing = false.obs;
   var startTextAnimation = false.obs;
   var startFadeOut = false.obs;
-  var textColor = Colors.white.obs; // Tambahkan ini
+  var textColor = Colors.white.obs;
 
   @override
   void onInit() {
     super.onInit();
+    _initAnimations();
+  }
 
+  void _initAnimations() {
     logoController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
@@ -37,11 +42,6 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
               timer.cancel();
             }
           });
-        });
-
-        Future.delayed(const Duration(seconds: 3), () {
-          startFadeOut.value = true;
-          gradientController.forward();
         });
       });
 
@@ -60,18 +60,50 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
         curve: Curves.easeInOut,
       ),
     )..addListener(() {
-        // Tambahkan listener untuk update warna teks
         if (gradientAnimation.value <= 0.01) {
           textColor.value = Colors.black;
         } else {
           textColor.value = Colors.white;
         }
       });
+    Future.delayed(const Duration(seconds: 1), () {
+      _checkAuthStatus();
+    });
+  }
 
-    gradientController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Get.toNamed("/login");
-      }
+  Future<void> _checkAuthStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final token = prefs.getString('token');
+    final role = prefs.getString('role');
+
+    print('Token tersimpan: $token');
+    print('Role tersimpan: $role');
+
+    if (token == null || token.isEmpty || role == null || role.isEmpty) {
+      // Kalau token atau role kosong → ke login
+      _navigateAfterDelay("/login");
+      return;
+    }
+
+    // Kalau token dan role ada → arahkan sesuai role
+    if (role == 'teacher') {
+      _navigateAfterDelay("/home-teacher");
+    } else if (role == 'parent') {
+      _navigateAfterDelay("/home-parent");
+    } else {
+      // Kalau role aneh → fallback ke login
+      _navigateAfterDelay("/login");
+    }
+  }
+
+  Future<void> _navigateAfterDelay(String routeName) async {
+    // Wait for animations to complete or minimum splash time (3 seconds)
+    await Future.delayed(const Duration(seconds: 3));
+
+    startFadeOut.value = true;
+    gradientController.forward().whenComplete(() {
+      Get.offAllNamed(routeName);
     });
   }
 

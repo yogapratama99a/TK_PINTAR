@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:tk_pertiwi/services/api_service.dart';
 
 class ChatController extends GetxController {
   final messageController = TextEditingController();
@@ -100,7 +101,9 @@ class ChatController extends GetxController {
         return {
           'id': doc.id,
           'message': data['message'] ?? '',
-          'time': timestamp != null ? timestamp.toDate() : DateTime.now(),
+          'time': timestamp != null
+              ? timestamp.toDate()
+              : (data['localTime']?.toDate() ?? DateTime.now()),
           'readAt': readAt?.toDate(),
           'isMe': data['senderId'].toString() == currentUserId.value,
           'senderRole': data['senderRole'] ?? '',
@@ -113,7 +116,11 @@ class ChatController extends GetxController {
       if (isNewMessage) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scrollController.hasClients) {
-            scrollController.jumpTo(scrollController.position.maxScrollExtent);
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
           }
         });
       }
@@ -127,6 +134,7 @@ class ChatController extends GetxController {
     final chatId = generateChatId(currentUserId.value, otherUserId);
 
     try {
+      // 1️⃣ Kirim pesan ke Firestore
       await FirebaseFirestore.instance
           .collection('chats')
           .doc(chatId)
@@ -136,17 +144,27 @@ class ChatController extends GetxController {
         'time': FieldValue.serverTimestamp(),
         'senderId': currentUserId.value,
         'senderRole': currentUserRole.value,
-        'readAt': null, // tambahkan
+        'readAt': null,
         'localTime': DateTime.now(),
       });
 
-      clearMessage(); // clear input + template setelah kirim
+      // 2️⃣ Ambil data user pengirim dari API
+      final senderProfile =
+          await ApiService.getUserById(int.parse(currentUserId.value));
+
+      if (senderProfile['success'] == true) {
+        final senderName = senderProfile['data']['name'];
+        final senderImage = senderProfile['data']['profile_image'];
+        
+      } else {
+        print('Failed to fetch sender profile');
+      }
+
+      clearMessage();
     } catch (e) {
       print('Error sending message: $e');
     }
   }
-
-  
 
   @override
   void onClose() {

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tk_pertiwi/controllers/chat-parent_controller.dart';
@@ -26,15 +27,14 @@ class SendMessageScreen extends StatefulWidget {
 class _SendMessageScreenState extends State<SendMessageScreen> {
   late final ChatController controller;
 
-@override
-void initState() {
-  super.initState();
-  controller = Get.put(ChatController());
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    controller.prepareChat(widget.receiverId.toString());
-  });
-}
-
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(ChatController());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.prepareChat(widget.receiverId.toString());
+    });
+  }
 
   @override
   void dispose() {
@@ -69,7 +69,13 @@ void initState() {
         children: [
           CircleAvatar(
             radius: 18,
-            backgroundImage: NetworkImage(widget.receiverImage),
+            backgroundImage: (widget.receiverImage.isNotEmpty)
+                ? CachedNetworkImageProvider(widget.receiverImage)
+                : null,
+            child: (widget.receiverImage.isEmpty)
+                ? const Icon(Icons.person, color: Colors.white)
+                : null,
+            backgroundColor: AppColors.blue,
           ),
           const SizedBox(width: 12),
           Column(
@@ -100,7 +106,8 @@ void initState() {
         return const Center(child: Text('Belum ada pesan'));
       }
 
-      return ListView.builder(  // <-- tambahkan return disini
+      return ListView.builder(
+        // <-- tambahkan return disini
         controller: controller.scrollController,
         itemCount: controller.messages.length,
         itemBuilder: (context, index) {

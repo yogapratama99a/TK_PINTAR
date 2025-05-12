@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tk_pertiwi/controllers/teacher_home_controller.dart';
 import 'package:tk_pertiwi/views/presentation/article_screen.dart';
+import 'package:tk_pertiwi/views/presentation/student_screen.dart';
 import 'package:tk_pertiwi/views/theme/app_colors.dart';
 import 'package:tk_pertiwi/views/theme/app_fonts.dart';
-import 'package:tk_pertiwi/views/widgets/navbar_teacher.dart';
+import 'package:tk_pertiwi/views/widgets/custom_bottom_navigation_bar.dart';
 
 class TeacherHomeScreen extends StatelessWidget {
   final TeacherHomeController controller = Get.put(TeacherHomeController());
 
-   TeacherHomeScreen({super.key});
+  TeacherHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,52 +26,52 @@ class TeacherHomeScreen extends StatelessWidget {
           title: Padding(
             padding: const EdgeInsets.only(top: 3.0),
             child: Obx(() => Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColors.grey,
-                  backgroundImage: controller.teacherImageUrl.isNotEmpty
-                      ? NetworkImage(controller.teacherImageUrl.value)
-                      : null,
-                  child: controller.teacherImageUrl.isEmpty
-                      ? const Icon(Icons.person, color: AppColors.white)
-                      : null,
-                ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Selamat Datang,",
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontFamily: AppFonts.PoppinsRegular,
-                        fontSize: 12,
-                      ),
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: AppColors.grey,
+                      backgroundImage: controller.teacherImageUrl.isNotEmpty
+                          ? NetworkImage(controller.teacherImageUrl.value)
+                          : null,
+                      child: controller.teacherImageUrl.isEmpty
+                          ? const Icon(Icons.person, color: AppColors.white)
+                          : null,
                     ),
-                    Text(
-                      controller.teacherName.value,
-                      style: const TextStyle(
-                        color: AppColors.black,
-                        fontFamily: AppFonts.PoppinsBold,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Selamat Datang,",
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontFamily: AppFonts.PoppinsRegular,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          controller.teacherName.value,
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontFamily: AppFonts.PoppinsBold,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.chat,
+                        color: AppColors.blue,
                       ),
-                    )
+                      onPressed: () async {
+                        Get.to(() => StudentChatScreen());
+                      },
+                    ),
                   ],
-                ),
-                const Spacer(),
-                Obx(() => IconButton(
-                  icon: Icon(
-                    controller.isNotificationActive.value
-                        ? Icons.notifications_active
-                        : Icons.notifications_off,
-                    color: AppColors.blue,
-                  ),
-                  onPressed: controller.toggleNotification,
                 )),
-              ],
-            )),
           ),
         ),
       ),
@@ -78,11 +79,11 @@ class TeacherHomeScreen extends StatelessWidget {
         if (controller.articleController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (controller.articleController.articles.isEmpty) {
           return const Center(child: Text('Tidak ada artikel tersedia'));
         }
-        
+
         return ListView.builder(
           padding: const EdgeInsets.all(16.0),
           itemCount: controller.articleController.articles.length,
@@ -111,8 +112,8 @@ class TeacherHomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(10)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(10)),
                       child: article.url.isNotEmpty
                           ? CachedNetworkImage(
                               imageUrl: article.url,
@@ -122,13 +123,15 @@ class TeacherHomeScreen extends StatelessWidget {
                               placeholder: (context, url) => Container(
                                 color: AppColors.grey.withOpacity(0.1),
                                 child: const Center(
-                                  child: Icon(Icons.image, size: 50, color: Colors.grey),
+                                  child: Icon(Icons.image,
+                                      size: 50, color: Colors.grey),
                                 ),
                               ),
                               errorWidget: (context, url, error) => Container(
                                 color: AppColors.grey.withOpacity(0.1),
                                 child: const Center(
-                                  child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                                  child: Icon(Icons.broken_image,
+                                      size: 50, color: Colors.grey),
                                 ),
                               ),
                             )
@@ -136,7 +139,8 @@ class TeacherHomeScreen extends StatelessWidget {
                               height: 150,
                               color: AppColors.grey.withOpacity(0.1),
                               child: const Center(
-                                child: Icon(Icons.article, size: 50, color: Colors.grey),
+                                child: Icon(Icons.article,
+                                    size: 50, color: Colors.grey),
                               ),
                             ),
                     ),
@@ -171,7 +175,7 @@ class TeacherHomeScreen extends StatelessWidget {
           },
         );
       }),
-      bottomNavigationBar: Obx(() => NavbarTeacher(
+       bottomNavigationBar: Obx(() => CustomBottomNavigationBar(
             selectedIndex: controller.selectedIndex.value,
             onItemTapped: controller.changeTabIndex,
           )),
